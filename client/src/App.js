@@ -1,8 +1,7 @@
 import React from "react";
 import { _isInputNumber } from '../src/helpers/helpers'
-let arrSelect = [[], [], [], []]
-let sumProductAll = [[], [], [], []]
-//varibles #1
+import { log } from "util";
+//varibles #1 - showDistinctTableDat
 let arrayOfProducts = []
 let arrayOfSortedProduct = []
 let distintSizeArray = []
@@ -10,6 +9,13 @@ let distintClrArray = []
 let distintPriceArray = []
 let distintImageArray = []
 let orderedArray
+let first
+let second
+let third
+let four
+//variables #2 - calculateSumEveryTable
+let arrSelect = []
+let sumProductAll = []
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -70,15 +76,27 @@ class App extends React.Component {
     }, 0);
 
     sumProductAll[tableId].push(singleSumProduct)
-    let a = sumProductAll[0]
-    let first = a[a.length - 1];
-    let b = sumProductAll[1]
-    let second = b[b.length - 1];
-    let c = sumProductAll[2]
-    let third = c[c.length - 1];
-    let d = sumProductAll[3]
-    let four = d[d.length - 1];
-    let subTotal = parseInt((!!first ? first : null) * this.state.distintPriceArray[0]) + parseInt((!!second ? second : null) * this.state.distintPriceArray[1]) + parseInt((!!third ? third : null) * this.state.distintPriceArray[2]) + parseInt((!!four ? four : null) * this.state.distintPriceArray[3])
+
+
+
+
+    if (tableId == 0) {
+      first = sumProductAll[tableId][sumProductAll[tableId].length - 1];
+    } else if (tableId == 1) {
+      second = sumProductAll[tableId][sumProductAll[tableId].length - 1];
+    } else if (tableId == 2) {
+      third = sumProductAll[tableId][sumProductAll[tableId].length - 1];
+    } else if (tableId == 3) {
+      four = sumProductAll[tableId][sumProductAll[tableId].length - 1];
+    }
+
+
+
+
+
+    let subTotal = parseInt((!!first ? parseInt(first * this.state.distintPriceArray[0]) : 0) + (!!second ? parseInt(second * this.state.distintPriceArray[1]) : 0) + (!!third ? parseInt(third * this.state.distintPriceArray[2]) : 0) + (!!four ? parseInt(four * this.state.distintPriceArray[3]) : 0))
+    console.log(subTotal);
+
     return subTotal
   }
 
@@ -96,6 +114,12 @@ class App extends React.Component {
       });
       return array;
     }
+    //Make empty array for sums
+    for (let i = 0; i < this.state.products.length; i++) {
+      arrSelect.push([])
+      sumProductAll.push([])
+    }
+
 
     let itemOrder = sortSize.attributes_sort_order.Size;
     let allUnsortedProducts = this.state.products
@@ -234,7 +258,8 @@ class App extends React.Component {
                   <tr><td><p>Total for {product.name}</p></td></tr>
                   <tr>
                     <td>
-                      <h4>{!!this.state.sumProductAll[j] ? (this.state.distintPriceArray[j] && (!!this.state.sumProductAll[j] ? this.state.sumProductAll[j][this.state.sumProductAll[j].length - 1] : null) * (!!this.state.distintPriceArray ? parseInt(this.state.distintPriceArray[j]) : null)) : 0} </h4>
+                      <h4>{!!this.state.sumProductAll[j] ? ((this.state.distintPriceArray[j] && (!!this.state.sumProductAll[j]) ? this.state.sumProductAll[j][this.state.sumProductAll[j].length - 1] : 0) * (!!this.state.distintPriceArray[j] ? parseInt(this.state.distintPriceArray[j]) : 0)) : 0} </h4>
+
                     </td>
                   </tr>
                 </tbody>
