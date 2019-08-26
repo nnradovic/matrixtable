@@ -164,7 +164,7 @@ class App extends React.Component {
     var apiRequest1 = fetch( process.env.NODE_ENV === 'production' ? `/products` : 'http://localhost:5000/products').then(function (response) {
       return response.json( )
     });
-    var apiRequest2 = fetch(process.env.NODE_ENV === 'production' ? `/products` : 'http://localhost:5000/settings' ).then(function (response) {
+    var apiRequest2 = fetch(process.env.NODE_ENV === 'production' ? `/settings` : 'http://localhost:5000/settings' ).then(function (response) {
       return response.json()
     });
     var combinedData = { "apiRequest1": {}, "apiRequest2": {} };
