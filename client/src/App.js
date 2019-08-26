@@ -23,6 +23,7 @@ let qty
 let id
 let sortedSizes
 let allUnsortedProducts
+let arraySumTotalOfAllTables = []
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -53,7 +54,7 @@ class App extends React.Component {
     this.setState({ onFocusValue: input.id });
   }
 
-  _calculateSumEveryTable(input) {
+  _calculateSumEveryTable(input) { //onInputChange
     tableId = parseInt(this.state.onFocusValue.slice(0, 1));
     //Grab qty and id of single input
     qty = input.value;
@@ -93,32 +94,23 @@ class App extends React.Component {
       }
     }
 
-    sumEnteredQtyPerTable[tableId] =
-      enteredQtyPerTable[tableId][enteredQtyPerTable[tableId].length - 1];
+    sumTotal = sumEnteredQtyPerTable[tableId] =
+      enteredQtyPerTable[tableId][enteredQtyPerTable[tableId].length - 1] * this.state.distintPriceArray[tableId];
 
-    //Not happy with this- NOT DYNAMIC :(
-    for (let i = 0; i < 4; i++) {
-      sumTotal = (!!sumEnteredQtyPerTable[i]
-        ? parseInt(sumEnteredQtyPerTable[0] * this.state.distintPriceArray[0])
-        : 0) +
-        (!!sumEnteredQtyPerTable[1]
-          ? parseInt(sumEnteredQtyPerTable[1] * this.state.distintPriceArray[1])
-          : 0) +
-        (!!sumEnteredQtyPerTable[2]
-          ? parseInt(sumEnteredQtyPerTable[2] * this.state.distintPriceArray[2])
-          : 0) +
-        (!!sumEnteredQtyPerTable[3]
-          ? parseInt(sumEnteredQtyPerTable[3] * this.state.distintPriceArray[3])
-          : 0)
 
+    arraySumTotalOfAllTables[tableId].unshift(sumTotal)
+    let sumTotalOfAllTables = 0
+    for (let i = 0; i < arraySumTotalOfAllTables.length; i++) {
+      if (arraySumTotalOfAllTables[i].length !== 0) {
+        sumTotalOfAllTables = sumTotalOfAllTables + parseInt(arraySumTotalOfAllTables[i][0])
+      }
     }
 
-
-    return sumTotal;
+    return sumTotalOfAllTables;
 
   }
 
-  _showDistinctTableData(sortSize) {
+  _showDistinctTableData(sortSize) { //OnLoad
     function mapOrder(array, order) {
       array.sort(function (a, b) {
         var A = a.attributes.Size,
@@ -135,6 +127,7 @@ class App extends React.Component {
     for (let i = 0; i < this.state.products.length; i++) {
       arrSelected.push([]);
       enteredQtyPerTable.push([]);
+      arraySumTotalOfAllTables.push([])
     }
 
     sortedSizes = sortSize.attributes_sort_order.Size;
@@ -220,7 +213,6 @@ class App extends React.Component {
       .then(response => {
         this._showDistinctTableData(response.apiRequest2);
         this.setState({
-          products: response.apiRequest1,
           variants: response.apiRequest1[0].variants,
           singleOrderdArrayOfVariants,
           distintClrArray,
@@ -305,7 +297,6 @@ class App extends React.Component {
                       />
                     </td>
                   </tr>
-
                   <tr id="age"><td><p>Size by age</p></td></tr>
                   <tr className="size">
                     <td style={{ display: 'contents' }}>
@@ -314,9 +305,7 @@ class App extends React.Component {
                           return <p key={i} className={`singleSize-${j}`}>{size}</p>;
                         })
                         : null}
-
                     </td>
-
                   </tr>
                   {!!this.state.distintClrArray
                     ? this.state.distintClrArray[j].map((element, i) => {
@@ -362,9 +351,7 @@ class App extends React.Component {
                         Total for {product.name}: {this.sumOfOneTable(j)}{" "}
                         {!!this.state.currency ? this.state.currency[0] : null}
                       </h4>
-
                     </td>
-
                   </tr>
                 </tbody>
               </table>
