@@ -13,42 +13,40 @@
 .App {
   margin-left: 5%;
 }
+
 .size {
   display: inline-flex;
   float: right;
 }
 
-.singleSize-0,
-.singleSize-1,
-.singleSize-2,
-.singleSize-3 {
+.singleSize-0, .singleSize-1, .singleSize-2, .singleSize-3 {
   margin-left: 24px;
   margin-right: 24px;
 }
+
 .singleSize-1 {
   margin-left: 24px;
   margin-right: 21px;
 }
+
 .name {
   font-size: 36px;
-}
-
-.itemNum {
-  font-size: 24px;
 }
 
 .price {
   font-size: 24px;
 }
+
 h2 {
   padding-left: 5px;
 }
+
 h4 {
   font-size: 24px;
 }
 
 input {
-  background: lightcyan;
+  background: lightgoldenrodyellow;
   border-radius: 3px;
   font-style: oblique;
   width: 70px;

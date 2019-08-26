@@ -1,3 +1,5 @@
+
+
 //Allow input only numbers
 export function _isInputNumber(e) {
     var ch = String.fromCharCode(e.which)
