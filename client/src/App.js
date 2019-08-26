@@ -161,10 +161,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    var apiRequest1 = fetch(`${process.env.PORT}/products`).then(function (response) {
+    var apiRequest1 = fetch( `http://localhost:${process.env.PORT}/products`|| `http://localhost:5000/products`).then(function (response) {
       return response.json()
     });
-    var apiRequest2 = fetch(`${process.env.PORT}/settings`).then(function (response) {
+    var apiRequest2 = fetch(`http://localhost:${process.env.PORT}/settings` || `http://localhost:5000/settings`).then(function (response) {
       return response.json()
     });
     var combinedData = { "apiRequest1": {}, "apiRequest2": {} };
