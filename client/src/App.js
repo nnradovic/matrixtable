@@ -1,7 +1,6 @@
 import React from "react";
 import { _isInputNumber } from '../src/helpers/helpers'
 import './App.css'
-import PropTypes from 'prop-types';
 //varibles #1 - showDistinctTableDat
 let arrayOfProducts = []
 let arrayOfSortedProduct = []
@@ -10,14 +9,10 @@ let distintClrArray = []
 let distintPriceArray = []
 let distintImageArray = []
 let orderedArray
-let first
-let second
-let third
-let four
-let sumOfItemPerTable = []
 //variables #2 - calculateSumEveryTable
 let arrSelect = []
 let sumProductAll = []
+let sumOfItemPerTable = []
 class App extends React.Component {
   constructor(props) {
     super(props);
