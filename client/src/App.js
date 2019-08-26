@@ -1,5 +1,6 @@
 import React from "react";
 import { _isInputNumber } from '../src/helpers/helpers'
+import './App.css'
 import { log } from "util";
 //varibles #1 - showDistinctTableDat
 let arrayOfProducts = []
@@ -13,6 +14,7 @@ let first
 let second
 let third
 let four
+let singleCurr
 //variables #2 - calculateSumEveryTable
 let arrSelect = []
 let sumProductAll = []
@@ -47,7 +49,7 @@ class App extends React.Component {
   }
 
   _calculateSumEveryTable(input) {
-    let tableId = this.state.onFocusValue.slice(0, 1)
+    let tableId = parseInt(this.state.onFocusValue.slice(0, 1))
     //Grab qty and id of single input
     let qty = input.value;
     let id = input.id;
@@ -61,10 +63,10 @@ class App extends React.Component {
     arrSelect[tableId].sort((a, b) => b.id - a.id);
 
     //If hit DELETE,BACKSPACE,or CUT
-    if (this.state.keyPress == 8 || this.state.keyCode == 46 || this.state.keyCode == 88) {
-      arrSelect[tableId].map((el, index) => {
-        if (el.id == id && el.qty == '') {
-          arrSelect[tableId].splice(index, 1)
+    if (this.state.keyPress === 8 || this.state.keyCode === 46 || this.state.keyCode === 88) {
+      return arrSelect[tableId].map((el, index) => {
+        if (el.id === id && el.qty === '') {
+          return arrSelect[tableId].splice(index, 1)
 
         }
       })
@@ -77,25 +79,17 @@ class App extends React.Component {
 
     sumProductAll[tableId].push(singleSumProduct)
 
-
-
-
-    if (tableId == 0) {
+   
+    if (tableId === 0) {
       first = sumProductAll[tableId][sumProductAll[tableId].length - 1];
-    } else if (tableId == 1) {
+    } else if (tableId === 1) {
       second = sumProductAll[tableId][sumProductAll[tableId].length - 1];
-    } else if (tableId == 2) {
+    } else if (tableId === 2) {
       third = sumProductAll[tableId][sumProductAll[tableId].length - 1];
-    } else if (tableId == 3) {
+    } else if (tableId === 3) {
       four = sumProductAll[tableId][sumProductAll[tableId].length - 1];
     }
-
-
-
-
-
     let subTotal = parseInt((!!first ? parseInt(first * this.state.distintPriceArray[0]) : 0) + (!!second ? parseInt(second * this.state.distintPriceArray[1]) : 0) + (!!third ? parseInt(third * this.state.distintPriceArray[2]) : 0) + (!!four ? parseInt(four * this.state.distintPriceArray[3]) : 0))
-    console.log(subTotal);
 
     return subTotal
   }
@@ -192,52 +186,61 @@ class App extends React.Component {
           distintSizeArray,
           distintPriceArray,
           distintImageArray
-        });
-      });
+        })
+         let currency= this.state.products[0].variants[0].prices 
+     
+         return currency
+         
+      }).then(currency=>{
+     
+        singleCurr = Object.keys(currency)
+         
+      })
   }
   render() {
     return (
       <div className="App">
-        <h3>Subtotal: {!!this.state.subTotal ? this.state.subTotal : 0}</h3>
+        <h2>Subtotal: {!!this.state.subTotal ? this.state.subTotal : 0} {!!singleCurr? singleCurr[0]: null}</h2>
         {this.state.products !== null
           ? this.state.products.map((product, j) => {
             return (
-              <table key={j}>
+              <table key={j} className="table" >
                 <thead>
                   <tr>
-                    <td >{product.name}</td>
-                    <td >{product.item_number}</td>
-                    <td>{!!this.state.distintPriceArray ? this.state.distintPriceArray[j] : null}</td>
-                    <td>
-                    </td>
+                    <tr>
+                    <td className="name">{product.name}</td>
+                    </tr>
+                    <tr>
+                    <td className="itemNum">Product id: {product.item_number}</td>
+                    </tr>
+                    <tr>
+                    <td className="price">Price per item: {!!this.state.distintPriceArray ? this.state.distintPriceArray[j] : null} DKK</td>
+                    </tr>
                   </tr>
                 </thead>
-                <tbody />
                 <tbody>
                   <tr>
                     <td>
-                      {!!this.state.distintImageArray ? this.state.distintImageArray[j].map((image, f) => {
-                        return (
-                          <img key={f}
-                            src={`https://res.cloudinary.com/traede/image/upload/c_fill,h_40,w_40/${image}`}
-                          />
-                        )
-                      }) : null}
+                          <img
+                            src={`https://res.cloudinary.com/traede/image/upload/c_fill,h_200,w_200/${product.primary_image}`} alt="No Image"
+                            />
                     </td>
                   </tr>
                   <tr>
-                    <td></td>
-                    <td>{!!this.state.distintSizeArray ? this.state.distintSizeArray[j] : null}</td>
-                    <td></td>
                   </tr>
-                  <tr>
+                   <p id="age">Size by age</p>
+                    <td className="size">{!!this.state.distintSizeArray ? this.state.distintSizeArray[j].map((size,i)=>{
+                      return(
+                        <p className={`singleSize-${j}`}>{size}</p>
+                        )
+                      }) : null}</td>
+                
                     {!!this.state.distintClrArray ? this.state.distintClrArray[j].map((element, i) => {
                       return (
                         <tr>
                           <td>
-                            <label>
-                              {" "}
-                              {element}
+                              <p className="color">{element}</p>
+                              <td className="inputs">
                               {!!this.state.distintSizeArray ? this.state.distintSizeArray[j].map((element, k) => {
                                 return (
                                   <input
@@ -245,29 +248,27 @@ class App extends React.Component {
                                     onInput={(e) => this.onInputChange(e.target, e.id)}
                                     onKeyPress={(e) => _isInputNumber(e)}
                                     onFocus={(e) => this.getValue(e.target)}
-                                    style={{ width: "90px", margin: "5px" }}
+                                    style={{ width: "70px", margin: "5px" }}
                                   ></input>
                                 );
                               }) : null}
-                            </label>
+                           </td>
                           </td>
                         </tr>
                       );
                     }) : null}
-                  </tr>
-                  <tr><td><p>Total for {product.name}</p></td></tr>
                   <tr>
                     <td>
-                      <h4>{!!this.state.sumProductAll[j] ? ((this.state.distintPriceArray[j] && (!!this.state.sumProductAll[j]) ? this.state.sumProductAll[j][this.state.sumProductAll[j].length - 1] : 0) * (!!this.state.distintPriceArray[j] ? parseInt(this.state.distintPriceArray[j]) : 0)) : 0} </h4>
 
                     </td>
                   </tr>
                 </tbody>
+                      <h4> Total for {product.name} {!!this.state.sumProductAll[j] ? ((this.state.distintPriceArray[j] && (!!this.state.sumProductAll[j]) ? this.state.sumProductAll[j][this.state.sumProductAll[j].length - 1] : 0) * (!!this.state.distintPriceArray[j] ? parseInt(this.state.distintPriceArray[j]) : 0)) : 0} {!!singleCurr? singleCurr[0]: null}</h4>
               </table>
             );
           })
           : ""}
-        <h3>Subtotal: {!!this.state.subTotal ? this.state.subTotal : 0}</h3>
+          
       </div>
     );
   }
