@@ -1,55 +1,60 @@
-
-.color{
+.color {
   display: inline;
   margin-right: 10px;
   margin-right: 20px;
-  font-size: 18px
+  font-size: 18px;
 }
 
-.inputs{
+.inputs {
   display: inline-table;
   float: right;
 }
 
-.App{
-  margin-left:5%;
+.App {
+  margin-left: 5%;
 }
-.size{
+.size {
   display: inline-flex;
   float: right;
 }
 
-.singleSize-0,.singleSize-1,.singleSize-2,.singleSize-3{
+.singleSize-0,
+.singleSize-1,
+.singleSize-2,
+.singleSize-3 {
   margin-left: 24px;
   margin-right: 24px;
 }
-.singleSize-1{
+.singleSize-1 {
   margin-left: 24px;
   margin-right: 21px;
 }
-.name{
-  font-size:36px;
+.name {
+  font-size: 36px;
 }
 
-.itemNum{
-   font-size: 24px
-}
-
-.price{
+.itemNum {
   font-size: 24px;
 }
-h2{
-  padding-left: 5px
+
+.price {
+  font-size: 24px;
+}
+h2 {
+  padding-left: 5px;
+}
+h4 {
+  font-size: 24px;
 }
 
-input{
+input {
   background: lightcyan;
-  border-radius:3px;
+  border-radius: 3px;
   font-style: oblique;
   width: 70px;
-  margin: 5px
+  margin: 5px;
 }
 
-#age{
-  font-size: 24px
+#age {
+  font-size: 24px;
 }
