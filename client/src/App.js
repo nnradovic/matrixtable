@@ -161,10 +161,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    var apiRequest1 = fetch( `http://murmuring-retreat-51523/products`).then(function (response) {
+    var apiRequest1 = fetch( `/products`).then(function (response) {
       return response.json()
     });
-    var apiRequest2 = fetch(`http://murmuring-retreat-51523/settings` ).then(function (response) {
+    var apiRequest2 = fetch(`/settings` ).then(function (response) {
       return response.json()
     });
     var combinedData = { "apiRequest1": {}, "apiRequest2": {} };
