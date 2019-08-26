@@ -1,5 +1,6 @@
 {
-  "name": "my-app",
+  "name": "teamcubate",
+  "url": "https://teamcubate-matrixtable.herokuapp.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

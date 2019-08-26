@@ -1,7 +1,7 @@
 import React from "react";
 import { _isInputNumber } from '../src/helpers/helpers'
 import './App.css'
-import { log } from "util";
+import PropTypes from 'prop-types';
 //varibles #1 - showDistinctTableDat
 let arrayOfProducts = []
 let arrayOfSortedProduct = []
@@ -14,7 +14,7 @@ let first
 let second
 let third
 let four
-let singleCurr
+let sumOfItemPerTable = []
 //variables #2 - calculateSumEveryTable
 let arrSelect = []
 let sumProductAll = []
@@ -32,7 +32,8 @@ class App extends React.Component {
       distintPriceArray: null,
       distintImageArray: null,
       onFocusValue: null,
-      subTotal: null
+      subTotal: null,
+      singleCurr:null
     };
   }
 
@@ -78,24 +79,33 @@ class App extends React.Component {
     }, 0);
 
     sumProductAll[tableId].push(singleSumProduct)
-
-   
+ 
+    console.log( sumOfItemPerTable);
+     
+     //Not happy with this- NOT DYNAMIC :(
     if (tableId === 0) {
-      first = sumProductAll[tableId][sumProductAll[tableId].length - 1];
+      sumOfItemPerTable[0] = sumProductAll[tableId][sumProductAll[tableId].length - 1];
     } else if (tableId === 1) {
-      second = sumProductAll[tableId][sumProductAll[tableId].length - 1];
+      sumOfItemPerTable[1] = sumProductAll[tableId][sumProductAll[tableId].length - 1];
     } else if (tableId === 2) {
-      third = sumProductAll[tableId][sumProductAll[tableId].length - 1];
+      sumOfItemPerTable[2]= sumProductAll[tableId][sumProductAll[tableId].length - 1];
     } else if (tableId === 3) {
-      four = sumProductAll[tableId][sumProductAll[tableId].length - 1];
+      sumOfItemPerTable[3] = sumProductAll[tableId][sumProductAll[tableId].length - 1];
     }
-    let subTotal = parseInt((!!first ? parseInt(first * this.state.distintPriceArray[0]) : 0) + (!!second ? parseInt(second * this.state.distintPriceArray[1]) : 0) + (!!third ? parseInt(third * this.state.distintPriceArray[2]) : 0) + (!!four ? parseInt(four * this.state.distintPriceArray[3]) : 0))
+    let subTotal = parseInt(
+      (!!sumOfItemPerTable[0] ? parseInt(sumOfItemPerTable[0] * this.state.distintPriceArray[0]) : 0)
+     + (!!sumOfItemPerTable[1] ? parseInt(sumOfItemPerTable[1] * this.state.distintPriceArray[1]) : 0) 
+     + (!!sumOfItemPerTable[2] ? parseInt(sumOfItemPerTable[2] * this.state.distintPriceArray[2]) : 0)
+     + (!!sumOfItemPerTable[3] ? parseInt(sumOfItemPerTable[3] * this.state.distintPriceArray[3]) : 0)
+      )
 
     return subTotal
   }
 
 
   _showDistinctTableData(sortSize) {
+  
+ 
     function mapOrder(array, order) {
       array.sort(function (a, b) {
         var A = a.attributes.Size,
@@ -158,6 +168,11 @@ class App extends React.Component {
       ];
       distintImageArray.push(distinctimage)
     }
+   
+    for(let i=0; i<4; i++){
+      sumOfItemPerTable.push([])
+    }
+
   }
 
   componentDidMount() {
@@ -187,20 +202,34 @@ class App extends React.Component {
           distintPriceArray,
           distintImageArray
         })
+
          let currency= this.state.products[0].variants[0].prices 
-     
          return currency
          
       }).then(currency=>{
      
-        singleCurr = Object.keys(currency)
+        this.setState({
+          singleCurr:Object.keys(currency)
+        })
          
       })
+  }
+
+  sumOfOneTable(j){
+    return(
+      //Checkin is NaN 
+      !!(!!this.state.sumProductAll[j] ? ((this.state.distintPriceArray[j] && (!!this.state.sumProductAll[j]) ? this.state.sumProductAll[j][this.state.sumProductAll[j].length - 1] : 0) * (!!this.state.distintPriceArray[j] ? parseInt(this.state.distintPriceArray[j]) : 0)) : 0 ) ?
+      //Sum of one table
+      !!this.state.sumProductAll[j] ? ((this.state.distintPriceArray[j] && (!!this.state.sumProductAll[j]) ? this.state.sumProductAll[j][this.state.sumProductAll[j].length - 1] : 0) *
+      //Unique price from that table
+     (!!this.state.distintPriceArray[j] ? parseInt(this.state.distintPriceArray[j]) : 0)) : 0: 0
+     //Not happy with this
+    )
   }
   render() {
     return (
       <div className="App">
-        <h2>Subtotal: {!!this.state.subTotal ? this.state.subTotal : 0} {!!singleCurr? singleCurr[0]: null}</h2>
+        <h2>Subtotal: {!!this.state.subTotal ? this.state.subTotal : 0} {!!this.state.singleCurr? this.state.singleCurr[0]: null}</h2>
         {this.state.products !== null
           ? this.state.products.map((product, j) => {
             return (
@@ -214,7 +243,7 @@ class App extends React.Component {
                     <td className="itemNum">Product id: {product.item_number}</td>
                     </tr>
                     <tr>
-                    <td className="price">Price per item: {!!this.state.distintPriceArray ? this.state.distintPriceArray[j] : null} DKK</td>
+                    <td className="price">Price per item: {!!this.state.distintPriceArray ? this.state.distintPriceArray[j] : null} {!!this.state.singleCurr? this.state.singleCurr[0]: null}</td>
                     </tr>
                   </tr>
                 </thead>
@@ -234,7 +263,6 @@ class App extends React.Component {
                         <p className={`singleSize-${j}`}>{size}</p>
                         )
                       }) : null}</td>
-                
                     {!!this.state.distintClrArray ? this.state.distintClrArray[j].map((element, i) => {
                       return (
                         <tr>
@@ -248,7 +276,6 @@ class App extends React.Component {
                                     onInput={(e) => this.onInputChange(e.target, e.id)}
                                     onKeyPress={(e) => _isInputNumber(e)}
                                     onFocus={(e) => this.getValue(e.target)}
-                                    style={{ width: "70px", margin: "5px" }}
                                   ></input>
                                 );
                               }) : null}
@@ -263,7 +290,7 @@ class App extends React.Component {
                     </td>
                   </tr>
                 </tbody>
-                      <h4> Total for {product.name} {!!this.state.sumProductAll[j] ? ((this.state.distintPriceArray[j] && (!!this.state.sumProductAll[j]) ? this.state.sumProductAll[j][this.state.sumProductAll[j].length - 1] : 0) * (!!this.state.distintPriceArray[j] ? parseInt(this.state.distintPriceArray[j]) : 0)) : 0} {!!singleCurr? singleCurr[0]: null}</h4>
+                      <h4> Total for {product.name} {this.sumOfOneTable(j)} {!!this.state.singleCurr? this.state.singleCurr[0]: null}</h4>
               </table>
             );
           })
