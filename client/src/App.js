@@ -9,21 +9,21 @@ let singleOrderdArrayOfVariants; //single orderd array of variants
 let arrSelected = []; //Here push object with uniqe id and value
 let enteredQtyPerTable = [];
 let sumEnteredQtyPerTable = [];
-let sumTotal
+let sumTotal;
 //Distinct
 let distintSizeArray = [];
 let distintClrArray = [];
 let distintPriceArray = [];
 let distintImageArray = [];
 //Other
-let lng //Number of products
-let currency //Currency
-let tableId
-let qty
-let id
-let sortedSizes
-let allUnsortedProducts
-let arraySumTotalOfAllTables = []
+let lng; //Number of products
+let currency; //Currency
+let tableId;
+let qty;
+let id;
+let sortedSizes;
+let allUnsortedProducts;
+let arraySumTotalOfAllTables = [];
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -54,7 +54,8 @@ class App extends React.Component {
     this.setState({ onFocusValue: input.id });
   }
 
-  _calculateSumEveryTable(input) { //onInputChange
+  _calculateSumEveryTable(input) {
+    //onInputChange
     tableId = parseInt(this.state.onFocusValue.slice(0, 1));
     //Grab qty and id of single input
     qty = input.value;
@@ -81,7 +82,7 @@ class App extends React.Component {
       });
     }
     //Calculate quantity all Products
-    var singleSumProduct = arrSelected[tableId].reduce(function (total, cur) {
+    var singleSumProduct = arrSelected[tableId].reduce(function(total, cur) {
       return total + parseInt(!!cur.qty ? cur.qty : 0);
     }, 0);
 
@@ -95,24 +96,25 @@ class App extends React.Component {
     }
 
     sumTotal = sumEnteredQtyPerTable[tableId] =
-      enteredQtyPerTable[tableId][enteredQtyPerTable[tableId].length - 1] * this.state.distintPriceArray[tableId];
+      enteredQtyPerTable[tableId][enteredQtyPerTable[tableId].length - 1] *
+      this.state.distintPriceArray[tableId];
 
-
-    arraySumTotalOfAllTables[tableId].unshift(sumTotal)
-    let sumTotalOfAllTables = 0
+    arraySumTotalOfAllTables[tableId].unshift(sumTotal);
+    let sumTotalOfAllTables = 0;
     for (let i = 0; i < arraySumTotalOfAllTables.length; i++) {
       if (arraySumTotalOfAllTables[i].length !== 0) {
-        sumTotalOfAllTables = sumTotalOfAllTables + parseInt(arraySumTotalOfAllTables[i][0])
+        sumTotalOfAllTables =
+          sumTotalOfAllTables + parseInt(arraySumTotalOfAllTables[i][0]);
       }
     }
 
     return sumTotalOfAllTables;
-
   }
 
-  _showDistinctTableData(sortSize) { //OnLoad
+  _showDistinctTableData(sortSize) {
+    //OnLoad
     function mapOrder(array, order) {
-      array.sort(function (a, b) {
+      array.sort(function(a, b) {
         var A = a.attributes.Size,
           B = b.attributes.Size;
         if (order.indexOf(A) > order.indexOf(B)) {
@@ -127,17 +129,16 @@ class App extends React.Component {
     for (let i = 0; i < this.state.products.length; i++) {
       arrSelected.push([]);
       enteredQtyPerTable.push([]);
-      arraySumTotalOfAllTables.push([])
+      arraySumTotalOfAllTables.push([]);
     }
 
     sortedSizes = sortSize.attributes_sort_order.Size;
     allUnsortedProducts = this.state.products;
-    //Create distinct proprety 
+    //Create distinct proprety
     for (let i = 0; i < allUnsortedProducts.length; i++) {
       arrayOfVariants.push(allUnsortedProducts[i].variants);
       singleOrderdArrayOfVariants = mapOrder(arrayOfVariants[i], sortedSizes);
       arrayOfSortedVariants.push(singleOrderdArrayOfVariants);
-
 
       //distinctSize
       let distinctsize = [
@@ -178,7 +179,7 @@ class App extends React.Component {
       ];
       distintImageArray.push(distinctimage);
     }
-    lng = this.state.products
+    lng = this.state.products;
     for (let i = 0; i < lng.length; i++) {
       sumEnteredQtyPerTable.push([]);
     }
@@ -189,19 +190,19 @@ class App extends React.Component {
       process.env.NODE_ENV === "production"
         ? `/products`
         : "http://localhost:5000/products"
-    ).then(function (response) {
+    ).then(function(response) {
       return response.json();
     });
     var apiRequest2 = fetch(
       process.env.NODE_ENV === "production"
         ? `/settings`
         : "http://localhost:5000/settings"
-    ).then(function (response) {
+    ).then(function(response) {
       return response.json();
     });
     var combinedData = { apiRequest1: {}, apiRequest2: {} };
     Promise.all([apiRequest1, apiRequest2])
-      .then(function (values) {
+      .then(function(values) {
         combinedData["apiRequest1"] = values[0];
         combinedData["apiRequest2"] = values[1];
         return combinedData;
@@ -221,7 +222,7 @@ class App extends React.Component {
           distintImageArray
         });
 
-        lng = this.state.products.length //Get number of product
+        lng = this.state.products.length; //Get number of product
         currency = this.state.products[0].variants[0].prices; //Get currency
         return currency;
       })
@@ -237,25 +238,26 @@ class App extends React.Component {
       //Checkin is NaN
       !!(!!this.state.enteredQtyPerTable[j]
         ? (this.state.distintPriceArray[j] && !!this.state.enteredQtyPerTable[j]
-          ? this.state.enteredQtyPerTable[j][
-          this.state.enteredQtyPerTable[j].length - 1
-          ]
-          : 0) *
-        (!!this.state.distintPriceArray[j]
-          ? parseInt(this.state.distintPriceArray[j])
-          : 0)
-        : 0)
-        ? //Sum of one table
-        !!this.state.enteredQtyPerTable[j]
-          ? (this.state.distintPriceArray[j] && !!this.state.enteredQtyPerTable[j]
             ? this.state.enteredQtyPerTable[j][
-            this.state.enteredQtyPerTable[j].length - 1
-            ]
+                this.state.enteredQtyPerTable[j].length - 1
+              ]
             : 0) *
-          //Unique price from that table
           (!!this.state.distintPriceArray[j]
             ? parseInt(this.state.distintPriceArray[j])
             : 0)
+        : 0)
+        ? //Sum of one table
+          !!this.state.enteredQtyPerTable[j]
+          ? (this.state.distintPriceArray[j] &&
+            !!this.state.enteredQtyPerTable[j]
+              ? this.state.enteredQtyPerTable[j][
+                  this.state.enteredQtyPerTable[j].length - 1
+                ]
+              : 0) *
+            //Unique price from that table
+            (!!this.state.distintPriceArray[j]
+              ? parseInt(this.state.distintPriceArray[j])
+              : 0)
           : 0
         : 0
       //Not happy with this
@@ -263,100 +265,104 @@ class App extends React.Component {
   }
   render() {
     return (
-      <div className="App">
-        <h2>
+      <div className="App" data-test="component-app">
+        <h2 data-test="sub-total">
           Sub Total: {!!this.state.sumTotal ? this.state.sumTotal : 0}{" "}
           {!!this.state.currency ? this.state.currency[0] : null}
         </h2>
         {this.state.products !== null
           ? this.state.products.map((product, j) => {
-            return (
-              <table key={j} className="table">
-                <thead>
-                  <tr>
-                    <td className="name">{product.name}</td>
-                  </tr>
-                  <tr>
-                    <td className="price">
-                      Price per item:{" "}
-                      {!!this.state.distintPriceArray
-                        ? this.state.distintPriceArray[j]
-                        : null}{" "}
-                      {!!this.state.currency
-                        ? this.state.currency[0]
-                        : null}
-                    </td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <img
-                        src={`https://res.cloudinary.com/traede/image/upload/c_fill,h_200,w_200/${product.primary_image}`}
-                        alt="Nothing found"
-                      />
-                    </td>
-                  </tr>
-                  <tr id="age"><td><p>Size by age</p></td></tr>
-                  <tr className="size">
-                    <td style={{ display: 'contents' }}>
-                      {!!this.state.distintSizeArray
-                        ? this.state.distintSizeArray[j].map((size, i) => {
-                          return <p key={i} className={`singleSize-${j}`}>{size}</p>;
-                        })
-                        : null}
-                    </td>
-                  </tr>
-                  {!!this.state.distintClrArray
-                    ? this.state.distintClrArray[j].map((element, i) => {
-                      return (
-                        <tr key={i}>
-                          <td className="color">{element}</td>
-                          <td className="inputs">
-                            {!!this.state.distintSizeArray
-                              ? this.state.distintSizeArray[j].map(
-                                (element, k) => {
-                                  return (
-                                    <input key={k}
-                                      id={`${j}-${i}-${k}`}
-                                      onInput={e =>
-                                        this.onInputChange(
-                                          e.target,
-                                          e.id
-                                        )
-                                      }
-                                      onKeyPress={e =>
-                                        _isInputNumber(e)
-                                      }
-                                      onFocus={e =>
-                                        this.getValue(e.target)
-                                      }
-                                    ></input>
-                                  );
-                                }
-                              )
-                              : null}
-                          </td>
-                        </tr>
-                      );
-                    })
-                    : null}
-                  <tr>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <h4>
-                        {" "}
-                        Total for {product.name}: {this.sumOfOneTable(j)}{" "}
+              return (
+                <table key={j} className="table">
+                  <thead>
+                    <tr>
+                      <td className="name">{product.name}</td>
+                    </tr>
+                    <tr>
+                      <td className="price">
+                        Price per item:{" "}
+                        {!!this.state.distintPriceArray
+                          ? this.state.distintPriceArray[j]
+                          : null}{" "}
                         {!!this.state.currency ? this.state.currency[0] : null}
-                      </h4>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            );
-          })
+                      </td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <img
+                          src={`https://res.cloudinary.com/traede/image/upload/c_fill,h_200,w_200/${product.primary_image}`}
+                          alt="Nothing found"
+                        />
+                      </td>
+                    </tr>
+                    <tr id="age">
+                      <td>
+                        <p>Size by age</p>
+                      </td>
+                    </tr>
+                    <tr className="size">
+                      <td style={{ display: "contents" }}>
+                        {!!this.state.distintSizeArray
+                          ? this.state.distintSizeArray[j].map((size, i) => {
+                              return (
+                                <p key={i} className={`singleSize-${j}`}>
+                                  {size}
+                                </p>
+                              );
+                            })
+                          : null}
+                      </td>
+                    </tr>
+                    {!!this.state.distintClrArray
+                      ? this.state.distintClrArray[j].map((element, i) => {
+                          return (
+                            <tr key={i}>
+                              <td className="color">{element}</td>
+                              <td className="inputs" data-test="inputs">
+                                {!!this.state.distintSizeArray
+                                  ? this.state.distintSizeArray[j].map(
+                                      (element, k) => {
+                                        return (
+                                          <input
+                                            key={k}
+                                            id={`${j}-${i}-${k}`}
+                                            onInput={e =>
+                                              this.onInputChange(e.target, e.id)
+                                            }
+                                            onKeyPress={e => _isInputNumber(e)}
+                                            onFocus={e =>
+                                              this.getValue(e.target)
+                                            }
+                                          ></input>
+                                        );
+                                      }
+                                    )
+                                  : null}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : null}
+                    <tr>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <h4 data-test="total">
+                          {" "}
+                          Total for {product.name}: {this.sumOfOneTable(j)}{" "}
+                          {!!this.state.currency
+                            ? this.state.currency[0]
+                            : null}
+                        </h4>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              );
+            })
           : ""}
       </div>
     );
