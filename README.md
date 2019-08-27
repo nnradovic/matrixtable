@@ -9,7 +9,7 @@ E-commerce matrix style table for a large order
 - MongoDb+Compass 
 
 ### Used for testing
--Enzyme
+- Enzyme
 
 You can see app on the folowing link
 https://teamcubate-matrixtable.herokuapp.com/
