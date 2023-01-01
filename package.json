@@ -4,7 +4,7 @@
   "description": "server side",
   "main": "server.js",
   "dependencies": {
-    "config": "^3.2.2",
+    "config": "^3.3.8",
     "express": "^4.17.1",
     "lodash": "^4.17.15",
     "mongodb": "^3.3.0",
